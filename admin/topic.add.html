@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="<[$ADTP]>/script/jquery-1.4.2.min.js"></script>
+<script src="<[$ADTP]>/script/ajaxfileupload.js"></script>
+<style type="text/css">
+body{margin:0; padding:0; width:100%; height:100%;}
+a{color:#666; text-decoration:none;}
+.index_main{height:500px; width:99%; }
+.main_content{ width:95%; height:95%; color:#666; margin-top:10px; margin-left:10px;}
+.tip{ width:100%; height:30px; background:#F6F6F6; text-align:center; line-height:30px;}
+.tip a{ font-size:12px;}
+.tip a:hover{ color:#F60;}
+.clear{clear:both;height:0; display:none;}
+
+.topic_add{position:absolute; left:10%; padding:0px; margin-top:15px;}
+.topic_add div{ margin-bottom:8px;}
+.topic_add div:hover{background:#E6E6E6;}
+.topic_add div span{ display:inline-block; font-size:12px; width:100px; height:30px; line-height:30px; text-align:right;}
+#ts{ width:150px; margin-left:20px; display:none;}.js{ line-height:150px !important; float:left; height:150px !important;}
+.sum{ width:300px; height:150px;}
+.sub{border:0px; float:right; background-color:#F6F6F6; cursor:pointer; width:70px; height:30px; font-size:14px;}
+.sub2{border:0px; background-color:#F6F6F6; cursor:pointer; width:50px; height:25px; font-size:12px;}
+</style>
+<script type="text/javascript">
+$(function(){
+	$(".sub2").live("click",function(){
+		$("#loading")
+		.ajaxStart(function(){
+			$(this).show();
+		})
+		.ajaxComplete(function(){
+			$(this).hide();
+		});
+		$.ajaxFileUpload({
+				type:"POST",
+				url:"<[$nowurl]>?fun=other&op=img",
+				secureuri:false,
+				fileElementId:$(this).prev().attr('id'),
+				dataType: "script",
+				data:{image:"$(this).prev().val();"},
+				success:function data(path){
+							$("#path").text("");
+							$("#path").val(path);
+						}
+		});
+	});
+});
+
+function tsxs(){
+	if($("#mod_id").val()==2||$("#mod_id").val()==3)$("#ts").css("display","inline-block");
+	else $("#ts").css("display","none");
+};
+</script>
+</head>
+
+<body>
+<div class="index_main">
+    	<div class="main_content">
+            <[include file="topic.header.html"]>
+            <div class="topic_add">
+            <img id="loading" src="<[$ADTP]>/images/loading.gif" style="display:none;">
+            <[if $uptopic]>
+                <[section name=data loop=$uptopic]>
+                <form action="?fun=topic&op=upd" method="post" enctype="multipart/form-data">
+                <div><span>栏目名称：</span><input type="text" name="name" value="<[$uptopic[data].name]>" />&nbsp;/&nbsp;<input type="text" name="atname" value="<[$uptopic[data].atname]>" /></div>
+                <div><span>显示图片：</span><input type="text" id="path" name="images"/></div>
+                <div><span>上传图片：</span><input type="file" id="1" name="image" style="border:1px solid; width:150px;" />&nbsp;&nbsp;<input type="button" name="imgsub" value="上传" class="sub2" /></div>
+                <div><span>所属栏目：</span>
+            	<select name="tpid">
+                	<option value="0">一级栏目</option>
+                    <[section name=na loop=$topicn]>
+                    <[if ($topicn[na].id!=$uptopic[data].id)&&($topicn[na].tpid==0)]>
+                    <option value="<[$topicn[na].id]>" <[if $topicn[na].id==$uptopic[data].tpid]>selected="selected"<[/if]>><[$topicn[na].name]></option>
+                    <[/if]>
+                    <[/section]>
+                </select>
+                </div>
+                <div><span>栏目类型：</span>
+                    <select id="mod_id" name="mod" onchange="javascript:tsxs()">
+                	<option value="0">仅作分类</option>
+                    <option value="1" <[if $uptopic[data].mods==1]> selected<[/if]>>单一页面</option>
+                    <option value="2" <[if $uptopic[data].mods==2]> selected<[/if]>>文章类型</option>
+                    <option value="3" <[if $uptopic[data].mods==3]> selected<[/if]>>图片类型</option>
+                </select><span id="ts">每页显示：<input type="text" name="num" value="<[$uptopic[data].num]>" style="width:50px;" />&nbsp;条</span>
+                </div>
+                <div><span>外部链接：</span><input type="text" value="<[$uptopic[data].link]>" style="width:300px;" name="link" /></div>
+                <div><span>导航显示：</span><input name="show" type="radio" value="1" checked />是<input name="show" type="radio" value="0" />否</div>
+                <div><span class="js">栏目介绍：</span><textarea name="summary"class="sum"><[$uptopic[data].summary]></textarea></div>
+                <div class="clear"></div>
+                <input type="hidden" name="id" value="<[$uptopic[data].id]>" />
+                <div style="width:420px; margin-top:15px;"><input type="submit" value="确认修改" class="sub" /></div>
+                </form>
+                <[/section]>
+            <[else]>
+            <form action="?fun=topic&op=adt" method="post" enctype="multipart/form-data">
+            <div><span>栏目名称：</span><input type="text" name="name" />&nbsp;/&nbsp;<input type="text" name="atname" /></div>
+            <div><span>显示图片：</span><input type="text" id="path" name="images"/></div>
+            <div><span>上传图片：</span><input type="file" id="1" name="image" style="border:1px solid; width:150px;" />&nbsp;&nbsp;<input type="button" name="imgsub" value="上传" class="sub2" /></div>
+            <div><span>所属栏目：</span>
+            	<select name="tpid">
+                	<option value="0">一级栏目</option>
+                    <[section name=na loop=$topicn]>
+                    <[if $topicn[na].tpid==0]>
+                    <option value="<[$topicn[na].id]>"><[$topicn[na].name]></option>
+                    <[/if]>
+                    <[/section]>
+                </select>
+            </div>
+            <div><span>栏目类型：</span>
+            	<select id="mod_id" name="mod" onchange="javascript:tsxs()">
+                	<option value="0">仅作分类</option>
+                    <option value="1">单一页面</option>
+                    <option value="2">文章类型</option>
+                    <option value="3">图片类型</option>
+                </select><span id="ts">每页显示：<input type="text" name="num" style="width:50px;" />&nbsp;条</span>
+            </div>
+            <div><span>外部链接：</span><input type="text" style="width:300px;" name="link" /></div>
+            <div><span>导航显示：</span><input name="show" type="radio" value="1" checked />是<input name="show" type="radio" value="0" />否</div>
+            <div><span class="js">栏目介绍：</span><textarea name="summary" class="sum"></textarea></div>
+            <div class="clear"></div>
+            <div style="width:420px; margin-top:15px;"><input type="submit" value="确认添加" class="sub" /></div>
+            </form>
+            <[/if]>
+            <div class="clear"></div>
+            </div>
+        </div>
+</div>
+</body>
+</html>

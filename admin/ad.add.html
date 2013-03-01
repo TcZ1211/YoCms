@@ -1,0 +1,166 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="<[$ADTP]>/script/jquery-1.4.2.min.js"></script>
+<script src="<[$ADTP]>/script/ajaxfileupload.js"></script>
+<style type="text/css">
+body{margin:0; padding:0; width:100%; height:100%;}
+a{color:#666; text-decoration:none;}
+.index_main{height:500px; width:99%; }
+.main_content{ width:95%; height:95%; color:#666; margin-top:10px; margin-left:10px;}
+.tip{ width:100%; height:30px; background:#F6F6F6; text-align:center; line-height:30px;}
+.tip a{ font-size:12px;}
+.tip a:hover{ color:#F60;}
+.clear{clear:both;height:0; display:none;}
+.sub{border:0px; background-color:#F6F6F6; cursor:pointer; width:70px; height:30px; font-size:14px;}
+
+.ad_add{ margin-top:15px;}
+.ad_chos{ width:500px; text-align:center; margin:auto;}
+.chos{ display:inline-block; width:100px; height:30px; background:#F6F6F6; text-align:center; line-height:30px; cursor:pointer; font-size:12px; }
+.chos:hover{background:#CCC;}
+.ad_mods{ width:500px; margin:auto; margin-top:10px; font-size:12px; display:none;}
+.ad_editor{ width:500px; margin:auto; margin-top:10px; font-size:12px; display:none;}
+.editor_div{ width:400px;}
+.editor_div span{ display:inline-block; width:150px; text-align:right;}
+.ad_mods div{ width:400px;}
+.ad_mods span{ display:inline-block; width:150px; text-align:right;}
+#inimg div{ margin-top:5px;}
+.sub2{border:0px; background-color:#F6F6F6; cursor:pointer; width:50px; height:25px; font-size:12px;}
+</style>
+<script type="text/javascript">
+function cmod(i){
+	var num;
+	for(num=1;num<=3;num++){
+		if(num==i)$("#ad_mod_"+num).css("display","block");
+		else $("#ad_mod_"+num).css("display","none");
+	}
+};
+$(function(){
+	$(".sub2").live("click",function(){
+		$("#loading")
+		.ajaxStart(function(){
+			$(this).show();
+		})
+		.ajaxComplete(function(){
+			$(this).hide();
+		});
+		var imgpath = $("#path_"+$(this).prev().attr('id'));
+		$.ajaxFileUpload({
+				type:"POST",
+				url:"<[$nowurl]>?fun=other&op=img",
+				secureuri:false,
+				fileElementId:$(this).prev().attr('id'),
+				dataType: "script",
+				data:{image:"$(this).prev().val();"},
+				success:function data(path){
+							imgpath.text("");
+							imgpath.val(path);
+						}
+		});
+	});
+});
+function imgnum(){
+	var num = $("#nums").val();
+	$("#p_nums").val(num);
+	var i;
+	$("#inimg").text("");
+	for(i=1;i<=num;i++){
+		$("#inimg").append("<div><span>图片地址：</span><input type='text' id='path_"+i+"' name='image_"+i+"'/></div><div><span>上传图片：</span><input type='file' id='"+i+"' name='image' style='border:1px solid; width:150px;' />&nbsp;&nbsp;<input type='button' name='imgsub' value='上传' class='sub2' /></div>");
+	}
+};
+</script>
+</head>
+
+<body>
+<div class="index_main">
+    	<div class="main_content">
+            <[include file="ad.header.html"]>
+            <div class="ad_add">
+            	<div class="ad_chos">
+                    <span class="chos" onclick="cmod(1)">图片列表</span>&nbsp;&nbsp;<!--span class="chos" onclick="cmod(2)">视频</span--><span class="chos" onclick="cmod(3)">其它</span>
+                    <div class="clear"></div>
+                </div>
+                <[if $upad]><!--修改-->
+                    <[section name=data loop=$upad]>
+                    <div class="ad_mods" id="ad_mod_1" style="<[if $upad[data].m_id==1]>display:block;<[/if]>">
+                        <form action="?fun=other&op=edit&mod=1" method="post" >
+                            <div><span>图片数量：</span><input type="text" name="nums" id="nums" onblur="imgnum()" style="width:50px;" value="1" />&nbsp;&nbsp;<img id="loading" src="<[$ADTP]>/images/loading.gif" style="display:none;"></div>
+                            <input type="hidden" name="m_id" value="1" /><input type="hidden" name="id" value="<[$upad[data].id]>" />
+                            <div><span>广告名称：</span><input type="text" name="name" value="<[$upad[data].name]>" /></div>
+                            <div><span>调用标识：</span><input type="text" name="p_id" value="<[$upad[data].p_id]>" />不可重复！</div>
+                            <div id="inimg">
+                            	<[if $upad[data].m_id==1]>
+                                <[section name=pics loop=$_ads.$p_id]>
+                                <div><span>图片地址：</span><input type="text" id="path_<[$_ads.$p_id[pics]._c]>" name="image_<[$_ads.$p_id[pics]._c]>" value="<[$_ads.$p_id[pics].pic]>"/></div>
+                                <div><span>上传图片：</span><input type="file" id="<[$_ads.$p_id[pics]._c]>" name="image" style="border:1px solid; width:150px;" />&nbsp;&nbsp;<input type="button" name="imgsub" value="上传" class="sub2" /></div>
+                                <[/section]>
+                                <[else]>
+                                <div><span>图片地址：</span><input type="text" id="path_1" name="image_1"/></div>
+                                <div><span>上传图片：</span><input type="file" id="1" name="image" style="border:1px solid; width:150px;" />&nbsp;&nbsp;<input type="button" name="imgsub" value="上传" class="sub2" /></div>
+                                <[/if]>
+                            </div>
+                        <div style="text-align:right; margin-top:5px;"><input type="submit" value="确认修改" class="sub" /></div>
+                        </form>
+                    </div>
+                    <!--div class="ad_mods" id="ad_mod_2" style="<[if $upad[data].m_id==2]>display:block;<[/if]>">
+                        <form action="?fun=other&op=add&mod=2" method="post" />
+                        <input type="hidden" name="m_id" value="2" />
+                        <div><span>广告名称：</span><input type="text" name="name" value="<[$upad[data].name]>"  /></div>
+                        <div><span>调用标识：</span><input type="text" name="p_id" value="<[$upad[data].p_id]>"  />不可重复！</div>
+                        <div><span>视频来源：</span><input type="text" name="video" <[if $upad[data].m_id==2]>value="<[$upad[data].content]>"<[/if]> style="width:170px;" />swf文件地址</div>
+                        <div style="text-align:right; margin-top:5px;"><input type="submit" value="确认修改" class="sub" /></div>
+                        </form>
+                        <div class="clear"></div>
+                    </div-->
+                    <div class="ad_editor" id="ad_mod_3" style="<[if $upad[data].m_id==3]>display:block;<[/if]>">
+                        <form action="?fun=other&op=edit&mod=3"  method="post" />
+                        <input type="hidden" name="m_id" value="3" /><input type="hidden" name="id" value="<[$upad[data].id]>" />
+                        <div class="editor_div"><span>广告名称：</span><input type="text" name="name" value="<[$upad[data].name]>"  /></div>
+                        <div class="editor_div"><span>调用标识：</span><input type="text" name="p_id" value="<[$upad[data].p_id]>"  />不可重复！</div>
+                        <div style=" width:370px; margin:auto; margin-top:5px; border:0px;"><[$editor_content]></div>
+                        <div style="text-align:right; margin-top:5px; width:450px;"><input type="submit" value="确认修改" class="sub" /></div>
+                        </form>
+                    </div>
+                    <[/section]>
+                <[else]><!--添加-->
+                    <div class="ad_mods" id="ad_mod_1" style="display:block;">
+                        <form action="?fun=other&op=add&mod=1" method="post" enctype="multipart/form-data">
+                            <div><span>图片数量：</span><input type="text" name="nums" id="nums" onblur="imgnum()" style="width:50px;" value="1" />&nbsp;&nbsp;<img id="loading" src="<[$ADTP]>/images/loading.gif" style="display:none;"></div>
+                            <input type="hidden" name="m_id" value="1" />
+                            <div><span>广告名称：</span><input type="text" name="name" /></div>
+                            <div><span>调用标识：</span><input type="text" name="p_id" />不可重复！</div>
+                            <div id="inimg">
+                            <div><span>图片地址：</span><input type="text" id="path_1" name="image_1"/></div>
+                            <div><span>上传图片：</span><input type="file" id="1" name="image" style="border:1px solid; width:150px;" />&nbsp;&nbsp;<input type="button" name="imgsub" value="上传" class="sub2" /></div>
+                            </div>
+                        <div style="text-align:right; margin-top:5px;"><input type="submit" value="确认添加" class="sub" /></div>
+                        </form>
+                    </div>
+                    <!--div class="ad_mods" id="ad_mod_2">
+                        <form action="?fun=other&op=add&mod=2" method="post" />
+                        <input type="hidden" name="m_id" value="2" />
+                        <div><span>广告名称：</span><input type="text" name="name" /></div>
+                        <div><span>调用标识：</span><input type="text" name="p_id" />不可重复！</div>
+                        <div><span>视频来源：</span><input type="text" name="video" style="width:170px;" />swf文件地址</div>
+                        <div style="text-align:right; margin-top:5px;"><input type="submit" value="确认添加" class="sub" /></div>
+                        </form>
+                        <div class="clear"></div>
+                    </div-->
+                    <div class="ad_editor" id="ad_mod_3">
+                        <form action="?fun=other&op=add&mod=3"  method="post" />
+                        <input type="hidden" name="m_id" value="3" />
+                        <div class="editor_div"><span>广告名称：</span><input type="text" name="name" /></div>
+                        <div class="editor_div"><span>调用标识：</span><input type="text" name="p_id" />不可重复！</div>
+                        <div style=" width:370px; margin:auto; margin-top:5px;"><[$editor_content]></div>
+                        <div style="text-align:right; margin-top:5px; width:450px;"><input type="submit" value="确认添加" class="sub" /></div>
+                        </form>
+                    </div>
+                <[/if]>
+                
+            </div>
+        </div>
+        
+</div>
+</body>
+</html>

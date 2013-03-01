@@ -1,0 +1,104 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="<[$ADTP]>/script/jquery-1.4.2.min.js"></script>
+<script type="text/javascript">
+$(function(){
+	$(".title2").click(function(){
+		if($(this).find("strong").html()){
+			$(this).html('<input type="text" value='+$(this).find("strong").html()+' />');
+			$(this).find("input").focus();
+			$(this).find("input").blur(function(){
+				$.ajax({
+					type:"POST",
+					url:"<[$nowurl]>?fun=topic&op=ajax&mod=1",
+					data:"name="+$(this).val()+"&id="+$(this).parent().parent().attr("rel"),
+					success:function(data){ if(data) alert(data); }
+				});
+				$(this).parent().html("<strong>"+$(this).val()+"</strong>");
+			});
+		}
+	});
+	$(".title3").click(function(){
+		if($(this).find("strong").html()){
+			$(this).html('<input type="text" class="text" value='+$(this).find("strong").html()+' />');
+			$(this).find("input").focus();
+			$(this).find("input").blur(function(){
+				$.ajax({
+					type:"POST",
+					url:"<[$nowurl]>?fun=topic&op=ajax&mod=2",
+					data:"name="+$(this).val()+"&id="+$(this).parent().parent().attr("rel"),
+					success:function(data){ if(data) alert(data); }
+				});
+				$(this).parent().html("<strong>"+$(this).val()+"</strong>");
+			});
+		}
+	});
+});
+</script>
+<style type="text/css">
+body{margin:0; padding:0; width:100%; height:100%;}
+a{color:#666; text-decoration:none;}
+.index_main{height:500px; width:99%; }
+.main_content{ width:95%; height:95%; color:#666; margin-top:10px; margin-left:10px;}
+.tip{ width:100%; height:30px; background:#F6F6F6; text-align:center; line-height:30px;}
+.tip a{ font-size:12px;}
+.tip a:hover{ color:#F60;}
+.clear{clear:both;height:0;}
+
+.main_topic{ list-style:none; display:inline-block; position:absolute; left:10%; padding:0px; margin-top:15px;}
+.main_topic li{ font-size:12px; white-space:nowrap;}
+.main_topic li:hover{background:#E6E6E6;}
+.dh{ font-size:14px !important; font-weight:bold;}
+.dh span{ background:#CCC;}
+.main_topic li span{ display:inline-block; height:30px; text-align:center; line-height:30px; margin-right:1px;}
+.no{ width:80px;}
+.title{width:420px;}.title1{width:420px; text-align:left !important;}
+.title2{display:inline !important;}.title2 strong{font-weight:normal;}
+.title3{display:inline !important;}.title3 strong{font-weight:normal;}
+.shows{width:80px; padding:0px; margin:0px;}
+.mod{width:80px;}
+.con{width:150px;}
+.con a{ margin-right:8px;}
+.con a:hover{ color:#F60;}
+.my{ color:#CCC; width:75px; font-weight:normal; margin-right:8px;}
+.sp{ border:0; font-size:12px; color:#666; display:inline-block; }
+.sp:hover{ border:1px solid; }/**/
+</style>
+</head>
+
+<body>
+<div class="index_main">
+    	<div class="main_content">
+        <[include file="topic.header.html"]>
+        	<ul class="main_topic">
+            	<li class="dh"><span class="no">编号</span><span class="title">栏目名称</span><span class="shows">导航显示</span><span class="mod">栏目类型</span><span class="con">操作</span></li>
+               <[section name=nav loop=$toplist]>
+                <li>
+                	<span class="no"><[$toplist[nav].id]></span><span title="点击可直接修改" class="title1" rel="<[$toplist[nav].id]>"><span class="title2"><strong><[$toplist[nav].name]></strong></span>/<span class="title3"><strong><[$toplist[nav].atname]></strong></span></span><span class="shows"><[if $toplist[nav].shows==1]>是<[else]>否<[/if]></span><span class="mod">
+                    <[if $toplist[nav].mods==0]>仅做分类
+                    <[elseif $toplist[nav].mods==1]>单一页面
+                    <[elseif $toplist[nav].mods==2]>文章类型
+                    <[elseif $toplist[nav].mods==3]>图片类型
+                    <[/if]>
+                    </span><span class="con"><[if $toplist[nav].mods==0]><strong class="my">内容管理</strong><[else]><a href="<[if $toplist[nav].mods==1]>?fun=single&op=list<[elseif $toplist[nav].mods==2]>?fun=article&op=list<[elseif $toplist[nav].mods==3]>?fun=picture&op=list<[/if]>&id=<[$toplist[nav].id]>">内容管理</a><[/if]><a href="?fun=topic&op=adedit&id=<[$toplist[nav].id]>">修改</a><a href="?fun=topic&op=del&id=<[$toplist[nav].id]>" onclick="return confirm('确认删除此栏目？')">删除</a></span></li>
+                    <[section name=s_nav loop=$topnav]>
+                    <[if $topnav[s_nav].tpid==$toplist[nav].id]>
+                    <li>
+                    	<span class="no"><[$topnav[s_nav].id]></span><span title="点击可直接修改" class="title1" rel="<[$topnav[s_nav].id]>">└<span class="title2">&nbsp;<strong><[$topnav[s_nav].name]></strong></span>&nbsp;/&nbsp;<span class="title3"><strong><[$topnav[s_nav].atname]></strong></span></span><span class="shows"><[if $topnav[s_nav].shows==1]>是<[else]>否<[/if]></span><span class="mod">
+                        <[if $topnav[s_nav].mods==0]>仅做分类
+                        <[elseif $topnav[s_nav].mods==1]>单一页面
+                        <[elseif $topnav[s_nav].mods==2]>文章类型
+                        <[elseif $topnav[s_nav].mods==3]>图片类型
+                        <[/if]>
+                        </span><span class="con"><[if $topnav[s_nav].mods==0]><strong class="my">内容管理</strong><[else]><a href="<[if $topnav[s_nav].mods==1]>?fun=single&op=list<[elseif $topnav[s_nav].mods==2]>?fun=article&op=list<[elseif $topnav[s_nav].mods==3]>?fun=picture&op=list<[/if]>&id=<[$topnav[s_nav].id]>">内容管理</a><[/if]><a href="?fun=topic&op=adedit&id=<[$topnav[s_nav].id]>">修改</a><a href="?fun=topic&op=del&id=<[$topnav[s_nav].id]>" onclick="return confirm('确认删除此栏目？')">删除</a></span></li>
+                    <[/if]>
+                    <[/section]>
+                <[sectionelse]>No Topic!<[/section]>
+                <div class="clear"></div>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>

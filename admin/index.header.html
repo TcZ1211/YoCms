@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<link href="<[$ADTP]>/style/public.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+body{background-color:#F6F6F6; margin:0; padding:0;}
+a{color:#666; text-decoration:none;}
+.index_top{ width:100%; height:100px; background:#F6F6F6;}
+.index_logo{ width:200px; height:98px; background-color:#FFF; float:left;}
+.index_logo span{font-size:60px; display:block; color:#666; line-height:98px; text-align:center; font-weight:bold;}
+.index_nav{ height:98px; width:85%; float:right; padding:0; }
+.index_nav ul{ display:block; position:absolute; line-height:50px; padding:0px; bottom:0px;  }
+.index_nav ul li{ display:block; height:50px; margin-right:5px; width:100px; float:left; text-align:center;}
+.index_nav ul li a{display:block; font-size:16px;}
+.index_nav ul li a:hover{ background-color:#FFF;}
+.sli{ display:block; position:absolute; line-height:50px; bottom:0px; right:25px;}
+.sli dd{ display:block; height:50px; margin:0px; width:60px; float:left; text-align:center; font-size:12px;}
+.sli dd a{ font-size:12px !important;}
+.sli dd a:hover{ color:#F60;}
+.clear{clear:both;height:0;}
+</style>
+</head>
+
+<body>
+	<div class="index_top">
+    	<div class="index_logo"><span>YoCms</span></div>
+        <div class="index_nav">
+            <ul>
+                <li><a href="?con=admin&mod=main" target="main">基本信息</a></li>
+                <li><a href="?con=admin&mod=topic" target="main">栏目管理</a></li>
+                <li><a href="?con=admin&mod=ad" target="main">附加功能</a></li>
+                <li><a href="#" target="main">站点设置</a></li>
+                <div class="clear"></div>
+            </ul>
+            <dl class="sli">
+                <dd style="width:150px !important;">欢迎您：<[$smarty.session.user]></dd>
+                <dd><a href="?con=admin&ad=alter" target="main">修改密码</a></dd>
+                <dd><a href="?con=admin&ad=quit" target="_top" onclick="return confirm('您确定要退出登录吗？');">退出登录</a></dd>
+                <dd><a href="#">网站首页</a></dd>
+            </dl>
+        </div>
+    </div>
+</body>
+</html>

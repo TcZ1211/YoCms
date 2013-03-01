@@ -1,0 +1,25 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Yoooooooo后台管理系统</title>
+<link href="<[$ADTP]>/style/admincss.css" rel="stylesheet" type="text/css" />
+<script src="<[$ADTP]>/script/cojs.js" type="text/javascript" /></script>
+</head>
+
+<body>
+    <div class="content">
+    	<div class="top">
+            <div class="logo"><span>YoCms</span></div>
+            <div class="tip"><span id="ts"></span></div>
+        </div>
+        <div class="login">
+            <form action="?login=true" method="post" onsubmit="return oncode()">
+            <div class="login-user"><span class="login-left">用户名：</span><input id="name" type="text" name="uname" style="width:150px;" /></div>
+            <div class="login-user"><span class="login-left">密码：</span><input id="psd" type="password" name="upass" style="width:150px;" /></div>
+            <div class="login-user"><span class="login-left">验证码：</span><input id="codes" type="text" name="codes" style="width:70px;" />&nbsp;<img name="code" id="code" onclick="fGetCode()" src="?login=img" title="看不清？点击换一张" style="cursor:pointer; vertical-align:bottom;"></div>
+            <div class="login-dd"><input type="submit" value="登陆" class="sub" /></div>
+            </form>
+        </div>
+    </div>
+</body>

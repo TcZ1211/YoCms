@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="<[$ADTP]>/script/jquery-1.4.2.min.js"></script>
+<script src="<[$ADTP]>/script/ajaxfileupload.js"></script>
+<style type="text/css">
+body{margin:0; padding:0; width:100%; height:100%;}
+a{color:#666; text-decoration:none;}
+.index_main{height:500px; width:99%; }
+.main_content{ width:95%; height:95%; color:#666; margin-top:10px; margin-left:10px;}
+.tip{ width:100%; height:30px; background:#F6F6F6; text-align:center; line-height:30px;}
+.tip a{ font-size:12px;}
+.tip a:hover{ color:#F60;}
+.clear{clear:both;height:0;}
+
+.topic_add{ position:absolute; left:10%; font-size:12px; padding:0px; margin-top:15px;}
+.topic_add div{ margin-bottom:8px;}
+.topic_add div:hover{background:#E6E6E6;}
+.title{ display:inline-block; font-size:12px; width:100px; height:30px; line-height:30px; text-align:right;}
+.js{display:inline-block;  line-height:150px !important; float:left; width:100px; height:150px !important; font-size:12px; text-align:right;}
+.title_c{display:inline-block; line-height:400px !important; float:left; width:100px; text-align:right; height:400px !important; font-size:12px;}
+.sum{ width:300px; height:150px;}
+.sub{border:0px; float:right; background-color:#F6F6F6; cursor:pointer; width:70px; height:30px; font-size:14px;}
+.sub2{border:0px; background-color:#F6F6F6; cursor:pointer; width:50px; height:25px; font-size:12px;}
+</style>
+<script type="text/javascript">
+$(function(){
+	$(".sub2").live("click",function(){
+		$("#loading")
+		.ajaxStart(function(){
+			$(this).show();
+		})
+		.ajaxComplete(function(){
+			$(this).hide();
+		});
+		$.ajaxFileUpload({
+				type:"POST",
+				url:"<[$nowurl]>?fun=other&op=img",
+				secureuri:false,
+				fileElementId:$(this).prev().attr('id'),
+				dataType: "script",
+				data:{image:"$(this).prev().val();"},
+				success:function data(path){
+							$("#path").text("");
+							$("#path").val(path);
+						}
+		});
+	});
+});
+</script>
+</head>
+
+<body>
+<div class="index_main">
+    <div class="main_content">
+        <[include file="article.header.html"]>
+        <div class="topic_add">
+        		<[if $articlee]>
+                <[section name=data loop=$articlee]>
+                <form action="?fun=article&op=editor&art_id=<[$art_id]>" method="post" />
+                <div><span class="title">标题：</span><input type="text" name="title" value="<[$articlee[data].title]>" /><span class="title">作者：</span><input type="text" name="author" value="<[$articlee[data].author]>" /></div>
+                <div><span class="title">显示图片：</span><input type="text" id="path" name="images" value="<[$articlee[data].image]>" style="width:190px;"/>&nbsp;&nbsp;<input type="file" id="1" name="image" style="border:1px solid; width:150px;" />&nbsp;&nbsp;<input type="button" name="imgsub" value="上传" class="sub2" /><img id="loading" src="<[$ADTP]>/images/loading.gif" style="display:none;"></div>
+                
+                <div><span class="title_c">内容：</span><div style="display:inline; float:right;"><[$article_content]></div><div class="clear"></div></div>
+                <div><span class="js">摘要：</span><textarea name="summary" class="sum" /><[$articlee[data].summary]></textarea></div>
+                <div class="clear"></div>
+                <input type="hidden" name="id" />
+                <div style="width:420px; margin-top:15px;"><input type="submit" value="确认修改" class="sub" /></div>
+                </form>
+                <[/section]>
+                <[else]>
+                <form action="?fun=article&op=save&p_id=<[$p_id]>" method="post" />
+                <div><span class="title">标题：</span><input type="text" name="title" /><span class="title">作者：</span><input type="text" name="author" /></div>
+                <div><span class="title">显示图片：</span><input type="text" id="path" name="images" style="width:190px;"/>&nbsp;&nbsp;<input type="file" id="1" name="image" style="border:1px solid; width:150px;" />&nbsp;&nbsp;<input type="button" name="imgsub" value="上传" class="sub2" /><img id="loading" src="<[$ADTP]>/images/loading.gif" style="display:none;"></div>
+                
+                <div><span class="title_c">内容：</span><div style="display:inline; float:right;"><[$article_content]></div><div class="clear"></div></div>
+                <div><span class="js">摘要：</span><textarea name="summary"class="sum"></textarea></div>
+                <div class="clear"></div>
+                <input type="hidden" name="id" />
+                <div style="width:420px; margin-top:15px;"><input type="submit" value="确认添加" class="sub" /></div>
+                </form>
+                <[/if]>
+            <div class="clear"></div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

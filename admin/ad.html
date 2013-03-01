@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+body{margin:0; padding:0; width:100%; height:100%;}
+a{color:#666; text-decoration:none;}
+.index_main{height:500px; width:99%; }
+.main_content{ width:95%; height:95%; color:#666; margin-top:10px; margin-left:10px;}
+.tip{ width:100%; height:30px; background:#F6F6F6; text-align:center; line-height:30px;}
+.tip a{ font-size:12px;}
+.tip a:hover{ color:#F60;}
+.clear{clear:both;height:0;}
+
+.main_topic{ list-style:none; display:inline-block; position:absolute; left:10%; padding:0px; margin-top:15px;}
+.main_topic li{ font-size:12px; padding:0px; margin:0px;}
+.main_topic li:hover{background:#E6E6E6;}
+.dh{ font-size:14px !important; font-weight:bold;}
+.dh span{ background:#CCC;}
+.main_topic li span{ display:inline-block; height:30px; margin-right:1px; text-align:center; line-height:30px;}
+.no{ width:80px;}
+.title{width:420px;}
+.shows{width:80px;}
+.mod{width:80px;}
+.con{width:150px;}
+.con a{ font-size:12px; margin-right:8px;}
+.con a:hover{ color:#F60;}
+.sp{ border:0; font-size:12px; color:#666; display:inline-block; }
+.sp:hover{ border:1px solid; }
+</style>
+</head>
+
+<body>
+<div class="index_main">
+    	<div class="main_content">
+        <[include file="ad.header.html"]>
+        	<ul class="main_topic">
+            	<li class="dh"><span class="no">调用标识</span><span class="title">广告名称</span><span class="mod">广告类型</span><span class="con">操作</span></li>
+                <[section name=nav loop=$adlist]>
+                <li><span class="no"><[$adlist[nav].p_id]></span><span class="title"><[$adlist[nav].name]></span><span class="mod"><[if $adlist[nav].m_id==1]>图片列表<[elseif $adlist[nav].m_id==3]>其它<[/if]></span><span class="con"><a href="?fun=other&op=adedit&id=<[$adlist[nav].id]>">修改</a><a href="?fun=other&op=del&id=<[$adlist[nav].id]>" onclick="return confirm('确认删除此栏目？')">删除</a></span></li>
+                <[sectionelse]>No Ad!<[/section]>
+                <div class="clear"></div>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
